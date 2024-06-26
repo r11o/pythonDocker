@@ -1,0 +1,28 @@
+#How to run build this file :
+# from the root folder of the project run
+#$ docker buildx b . -f docker/dockerfile  -t python1:0.0.1
+#
+#Run the container with the entrypoint set in this dockerfile:
+# $ docker run python1:0.0.2 
+
+#Run the container, overriding the entrypoint to Call the python.py file and pass an age argument : 
+# $ docker run --entrypoint python python1:0.0.2 python.py 46
+
+
+
+#It's a python image provided by  with the tools needed to run a python script...
+from python:3.12-slim as build
+
+# Any working directory can be chosen as per choice like '/' or '/home' etc
+# i have chosen /usr/app/src
+WORKDIR /usr/app/src
+
+#to COPY the remote file at working directory in container
+COPY source/python2.py ./
+COPY source/python.py ./
+USER root
+RUN chmod +x /usr/app/src/python2.py
+RUN chmod +x /usr/app/src/python.py
+
+# Now the structure looks like this '/usr/app/src/python.py'
+ENTRYPOINT [ "python", "/usr/app/src/python2.py" ]
